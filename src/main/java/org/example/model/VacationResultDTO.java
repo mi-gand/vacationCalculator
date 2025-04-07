@@ -1,7 +1,7 @@
-package org.example.service;
+package org.example.model;
 
-import org.example.model.VacationResultDTO;
-import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,10 +10,13 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
-public class VacationPayService {
+@Getter
+public class VacationResultDTO {
+    private final BigDecimal averageDailySalary;
+    private final BigDecimal totalVacationPay;
+    private final List<LocalDate> vacationDates;
 
- /*   public VacationResultDTO calculate(Map<String, String> allParams) {
+    public VacationResultDTO(Map<String, String> allParams) {
         List<BigDecimal> salaries = extractBigDecimals(allParams, "salary_");
         List<BigDecimal> days = extractBigDecimals(allParams, "days_");
 
@@ -21,13 +24,11 @@ public class VacationPayService {
         BigDecimal totalDays = days.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
         if (totalDays.compareTo(BigDecimal.ZERO) == 0) totalDays = BigDecimal.ONE;
 
-        BigDecimal avgDaily = totalSalary.divide(totalDays, 2, RoundingMode.HALF_UP);
+        this.averageDailySalary = totalSalary.divide(totalDays, 2, RoundingMode.HALF_UP);
 
-        List<LocalDate> vacationDates = parseVacationDates(allParams);
+        this.vacationDates = parseVacationDates(allParams);
 
-        BigDecimal total = avgDaily.multiply(BigDecimal.valueOf(vacationDates.size())).setScale(2, RoundingMode.HALF_UP);
-
-        return new VacationResultDTO(avgDaily, total, vacationDates);
+        this.totalVacationPay = averageDailySalary.multiply(BigDecimal.valueOf(vacationDates.size())).setScale(2, RoundingMode.HALF_UP);
     }
 
     private List<BigDecimal> extractBigDecimals(Map<String, String> params, String prefix) {
@@ -58,5 +59,5 @@ public class VacationPayService {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }*/
+    }
 }
