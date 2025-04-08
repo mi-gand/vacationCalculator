@@ -4,10 +4,28 @@
     <meta charset="UTF-8">
     <title>Календарь отпусков 2025</title>
     <style>
-        body { font-family: sans-serif; }
-        .calendar { display: flex; flex-wrap: wrap; gap: 2rem; }
-        .month { border: 1px solid #ccc; padding: 1rem; width: 230px; }
-        .month h3 { text-align: center; margin: 0.5rem 0; text-transform: capitalize; }
+        body {
+            font-family: sans-serif;
+        }
+
+        .calendar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .month {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            width: 230px;
+        }
+
+        .month h3 {
+            text-align: center;
+            margin: 0.5rem 0;
+            text-transform: capitalize;
+        }
+
         .day-labels {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -16,19 +34,48 @@
             color: #888;
             margin-bottom: 0.3rem;
         }
+
         .days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 0.2rem;
             text-align: center;
         }
-        .day { padding: 5px; cursor: pointer; border-radius: 5px; }
-        .workday { background-color: #f0f0f0; }
-        .weekend { color: red; }
-        .holiday { background-color: #ffdcdc; border: 1px solid #ff5555; }
-        .selected { background-color: #4CAF50; color: white; }
-        #holidayNotice { margin-left: 1rem; color: darkred; font-weight: bold; }
-        .input-block { margin-bottom: 0.5rem; }
+
+        .day {
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .workday {
+            background-color: #f0f0f0;
+        }
+
+        .weekend {
+            color: red;
+        }
+
+        .holiday {
+            background-color: #ffdcdc;
+            border: 1px solid #ff5555;
+        }
+
+        .selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #holidayNotice {
+            margin-left: 1rem;
+            color: darkred;
+            font-weight: bold;
+        }
+
+        .input-block {
+            margin-bottom: 0.5rem;
+        }
+
         .detail-box {
             margin-top: 1rem;
             padding: 1rem;
@@ -36,11 +83,29 @@
             width: fit-content;
             background-color: #f9f9f9;
         }
-        #detailedForm { display: block; margin-top: 1rem; }
-        table { border-collapse: collapse; }
-        table, th, td { border: 1px solid #ccc; }
-        th, td { padding: 0.4rem 0.6rem; }
-        input[readonly] { background-color: #eee; border: none; text-align: center; }
+
+        #detailedForm {
+            display: block;
+            margin-top: 1rem;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 0.4rem 0.6rem;
+        }
+
+        input[readonly] {
+            background-color: #eee;
+            border: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -61,12 +126,17 @@
         <div style="text-align:center">
             <p><strong>Внести данные для точного расчета отпускных</strong></p>
             <button type="button" onclick="showDetailedForm()">Внести</button>
+            <button type="button" onclick="showDetailedForm(true)">Скрыть</button>
         </div>
     </div>
 
     <div id="detailedForm">
         <table>
-            <tr><th>Месяц до отпуска</th><th>Заработок</th><th>Учет дней</th></tr>
+            <tr>
+                <th>Месяц до отпуска</th>
+                <th>Заработок</th>
+                <th>Учет дней</th>
+            </tr>
             <tbody id="salaryTableBody"></tbody>
         </table>
     </div>
@@ -97,7 +167,7 @@
             const tdSalary = document.createElement('td');
             const salaryInput = document.createElement('input');
             salaryInput.type = hidden ? 'hidden' : 'number';
-            salaryInput.name = `salary_${i}`;
+            salaryInput.name = 'monthSalaries';
             salaryInput.id = `salary_${i}`;
             salaryInput.value = salaryValue;
             salaryInput.oninput = () => recalculateDays(i);
@@ -106,7 +176,7 @@
             const tdDays = document.createElement('td');
             const daysInput = document.createElement('input');
             daysInput.type = hidden ? 'hidden' : 'number';
-            daysInput.name = `days_${i}`;
+            daysInput.name = 'monthDaysWorked';
             daysInput.id = `days_${i}`;
             daysInput.value = daysValue;
             daysInput.max = '29.3';
@@ -150,10 +220,10 @@
     }
 
     const holidays2025 = [
-        "2025-01-01","2025-01-02","2025-01-03","2025-01-04","2025-01-05","2025-01-06","2025-01-07","2025-01-08",
+        "2025-01-01", "2025-01-02", "2025-01-03", "2025-01-04", "2025-01-05", "2025-01-06", "2025-01-07", "2025-01-08",
         "2025-02-23",
         "2025-03-08",
-        "2025-05-01","2025-05-09",
+        "2025-05-01", "2025-05-09",
         "2025-06-12",
         "2025-11-04"
     ];
@@ -168,7 +238,7 @@
         container.className = 'month';
 
         const title = document.createElement('h3');
-        title.textContent = new Date(2025, month).toLocaleString('ru-RU', { month: 'long' });
+        title.textContent = new Date(2025, month).toLocaleString('ru-RU', {month: 'long'});
         container.appendChild(title);
 
         const labels = document.createElement('div');
@@ -239,16 +309,16 @@
     }
 
     function validateVacation() {
-        const salary = parseInt(document.querySelector('[name="averageMonthlySalary"]').value,10);
+        const salary = parseInt(document.querySelector('[name="averageMonthlySalary"]').value, 10);
         const requiredDays = parseInt(document.querySelector('[name="vacationDays"]').value, 10);
         const selectedDates = Array.from(selected).sort();
         const holidaysInSelection = selectedDates.filter(d => holidays2025.includes(d));
 
-        if (salary < 22400){
+        if (salary < 22400) {
             alert("МРОТ в 2025г составляет 22400 руб")
             return false;
         }
-        if (selectedDates.length === 0 || isNaN(requiredDays) || requiredDays < 7 ) {
+        if (selectedDates.length === 0 || isNaN(requiredDays) || requiredDays < 7) {
             alert("Менее чем на 7 дней уходить в отпуск нельзя.");
             return false;
         }
@@ -283,6 +353,16 @@
                 return false;
             }
         }
+
+        document.querySelectorAll('input[name="vacationDates"]').forEach(e => e.remove());
+
+        Array.from(selected).forEach(dateStr => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'vacationDates';
+            input.value = dateStr;
+            document.querySelector('form').appendChild(input);
+        });
 
         return true;
     }

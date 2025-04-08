@@ -12,4 +12,5 @@ public class CalendarUtil {
             "2025-02-23", "2025-03-08", "2025-05-01", "2025-05-09",
             "2025-06-12", "2025-11-04"
     ).map(LocalDate::parse).collect(Collectors.toList());
+
 }

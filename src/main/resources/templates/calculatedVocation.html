@@ -7,8 +7,9 @@
 <body>
 <h1>Результаты расчета отпускных</h1>
 
-<p><strong>Среднедневной заработок:</strong> <span th:text="${VacationResultDTO.getAverageDailySalary()}"></span> руб</p>
-<p><strong>Сумма отпускных:</strong> <span th:text="${VacationResultDTO.getTotalVacationPay()}"></span> руб</p>
+<p><strong>Среднедневной заработок:</strong> <span th:text="${VacationResultDTO.getAverageDaySalary()}"></span> руб</p>
+<p><strong>Сумма отпускных:</strong> <span th:text="${VacationResultDTO.getTotalCompensationForVocation()}"></span> руб
+</p>
 <p><strong>Даты отпуска:</strong></p>
 <ul>
     <li th:each="date : ${VacationResultDTO.getVacationDates()}" th:text="${date}"></li>

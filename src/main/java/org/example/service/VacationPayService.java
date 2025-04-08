@@ -1,62 +1,77 @@
 package org.example.service;
 
-import org.example.model.VacationResultDTO;
+import org.example.controller.VacationPayController;
+import org.example.model.AccountingData;
+import org.example.model.VacationRequestDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class VacationPayService {
+    private static final Logger log = LoggerFactory.getLogger(VacationPayService.class);
 
- /*   public VacationResultDTO calculate(Map<String, String> allParams) {
-        List<BigDecimal> salaries = extractBigDecimals(allParams, "salary_");
-        List<BigDecimal> days = extractBigDecimals(allParams, "days_");
+    public AccountingData createModelAccountingData(VacationRequestDTO dto) {
+        AccountingData data = new AccountingData();
 
-        BigDecimal totalSalary = salaries.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal totalDays = days.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (totalDays.compareTo(BigDecimal.ZERO) == 0) totalDays = BigDecimal.ONE;
+        List<BigDecimal> monthSalaries = convertMonthSalariesToBigDecimal(dto.getMonthSalaries());
+        log.info("monthSalaries:{}", monthSalaries);
+        List<BigDecimal> monthDaysWorked = convertMonthDaysWorkedToBigDecimal(dto.getMonthDaysWorked());
+        log.info("monthDaysWorked:{}", monthDaysWorked);
+        List<LocalDate> vacationDates = convertVacationDatesToLocalDate(dto.getVacationDates());
+        log.info("vacationDates:{}", vacationDates);
+        BigDecimal totalSalary = calculateTotalSalaryPrevious12Month(monthSalaries);
+        log.info("totalSalary:{}", totalSalary);
+        BigDecimal totalDays = calculateTotalWorkedDaysPrevious12Month(monthDaysWorked);
+        log.info("totalDays:{}", totalDays);
+        BigDecimal averageDaySalary = calculateAverageDaySalary(totalSalary, totalDays);
+        BigDecimal totalCompensationForVocation = averageDaySalary.multiply(BigDecimal.valueOf(vacationDates.size()));
 
-        BigDecimal avgDaily = totalSalary.divide(totalDays, 2, RoundingMode.HALF_UP);
+        data.setTotalSalaryPrevious12Month(totalSalary);
+        data.setTotalWorkedDaysPrevious12Month(totalDays);
+        data.setAverageDaySalary(averageDaySalary);
+        data.setMonthSalary(dto.getAverageMonthlySalary());
+        data.setVacationDates(vacationDates);
+        data.setMonthSalaries(monthSalaries);
+        data.setMonthDaysWorked(monthDaysWorked);
+        data.setTotalCompensationForVocation(totalCompensationForVocation);
 
-        List<LocalDate> vacationDates = parseVacationDates(allParams);
-
-        BigDecimal total = avgDaily.multiply(BigDecimal.valueOf(vacationDates.size())).setScale(2, RoundingMode.HALF_UP);
-
-        return new VacationResultDTO(avgDaily, total, vacationDates);
+        return data;
     }
 
-    private List<BigDecimal> extractBigDecimals(Map<String, String> params, String prefix) {
-        List<BigDecimal> values = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            try {
-                values.add(new BigDecimal(params.getOrDefault(prefix + i, "0")));
-            } catch (NumberFormatException e) {
-                values.add(BigDecimal.ZERO);
-            }
-        }
-        return values;
-    }
-
-    private List<LocalDate> parseVacationDates(Map<String, String> params) {
-        String raw = params.get("vacationDates");
-        if (raw == null || raw.isBlank()) return Collections.emptyList();
-
-        return Arrays.stream(raw.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .map(s -> {
-                    try {
-                        return LocalDate.parse(s);
-                    } catch (DateTimeParseException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
+    public List<BigDecimal> convertMonthSalariesToBigDecimal(List<Double> monthSalaries) {
+        return monthSalaries.stream().map(BigDecimal::valueOf)
                 .collect(Collectors.toList());
-    }*/
+    }
+
+    public List<BigDecimal> convertMonthDaysWorkedToBigDecimal(List<Double> monthDaysWorked) {
+        return monthDaysWorked.stream().map(BigDecimal::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    public List<LocalDate> convertVacationDatesToLocalDate(List<String> vacationDates) {
+        return vacationDates.stream().map(LocalDate::parse).collect(Collectors.toList());
+    }
+
+    public BigDecimal calculateTotalSalaryPrevious12Month(List<BigDecimal> monthSalaries) {
+        return monthSalaries.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal calculateTotalWorkedDaysPrevious12Month(List<BigDecimal> monthDaysWorked) {
+        return monthDaysWorked.stream().reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+    }
+
+    public BigDecimal calculateAverageDaySalary(BigDecimal totalSalaryPrevious12Month,
+                                                BigDecimal totalWorkedDaysPrevious12Month) {
+        if (totalWorkedDaysPrevious12Month == null || totalWorkedDaysPrevious12Month.compareTo(BigDecimal.ZERO) == 0) {
+            throw new IllegalArgumentException("Wrong input"); //todo exception and handler
+        }
+        return totalSalaryPrevious12Month.divide(totalWorkedDaysPrevious12Month, 2, RoundingMode.HALF_UP);
+    }
 }
