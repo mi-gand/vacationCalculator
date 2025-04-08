@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import static org.example.util.Validator.validateRequest;
+
 @Controller
 public class VacationPayController {
     private static final Logger log = LoggerFactory.getLogger(VacationPayController.class);
@@ -22,9 +24,14 @@ public class VacationPayController {
     @GetMapping("/calculate")
     public String calculate(@ModelAttribute VacationRequestDTO dtoFromPage, Model model) {
         log.info("DTO from page: {}", dtoFromPage);
+
+        String validationError = validateRequest(dtoFromPage);
+        if (validationError != null) {
+            model.addAttribute("alertMessage", validationError);
+            return "afterBadValidation";
+        }
         AccountingData accountingData = vacationPayService.createModelAccountingData(dtoFromPage);
         VacationResponseDTO dtoToPage = new VacationResponseDTO(accountingData);
-        //todo validation data
         model.addAttribute("VacationResultDTO", dtoToPage);
         return "calculatedVocation";
     }
