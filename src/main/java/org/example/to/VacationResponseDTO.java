@@ -1,6 +1,7 @@
-package org.example.model;
+package org.example.to;
 
 import lombok.Data;
+import org.example.model.AccountingData;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package org.example.util;
 
-import org.example.model.VacationRequestDTO;
+import org.example.to.VacationRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

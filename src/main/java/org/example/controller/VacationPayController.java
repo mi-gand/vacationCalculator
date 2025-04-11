@@ -1,8 +1,8 @@
 package org.example.controller;
 
 import org.example.model.AccountingData;
-import org.example.model.VacationRequestDTO;
-import org.example.model.VacationResponseDTO;
+import org.example.to.VacationRequestDTO;
+import org.example.to.VacationResponseDTO;
 import org.example.service.VacationPayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +24,7 @@ public class VacationPayController {
     @GetMapping("/calculate")
     public String calculate(@ModelAttribute VacationRequestDTO dtoFromPage, Model model) {
         log.info("DTO from page: {}", dtoFromPage);
+        dtoFromPage.setAverageMonthlySalary(null);
 
         String validationError = validateRequest(dtoFromPage);
         if (validationError != null) {
