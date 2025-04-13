@@ -24,8 +24,6 @@ public class VacationPayController {
     @GetMapping("/calculate")
     public String calculate(@ModelAttribute VacationRequestDTO dtoFromPage, Model model) {
         log.info("DTO from page: {}", dtoFromPage);
-        dtoFromPage.setAverageMonthlySalary(null);
-
         String validationError = validateRequest(dtoFromPage);
         if (validationError != null) {
             model.addAttribute("alertMessage", validationError);
