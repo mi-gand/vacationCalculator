@@ -1,6 +1,7 @@
 package org.example.util;
 
-import org.example.to.VacationRequestDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.example.dto.VacationRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,9 +9,8 @@ import java.math.BigDecimal;
 
 import static org.example.util.CalendarUtil.HOLIDAYS_WITHOUT_PAY_2025;
 
+@Slf4j
 public class Validator {
-    private static final Logger log = LoggerFactory.getLogger(Validator.class);
-
     public static String validateRequest(VacationRequestDTO requestDto) {
         StringBuilder responseErr = new StringBuilder();
         if (requestDto.getAverageMonthlySalary() == null) {
@@ -32,7 +32,7 @@ public class Validator {
         if (requestDto.getVacationDates().stream().anyMatch(HOLIDAYS_WITHOUT_PAY_2025::contains)) {
             responseErr.append("*В выбранные дни отпуска попадают праздничные дни\n");
         }
-        log.info("Value of Err: {}", responseErr);
+        log.debug("Value of Err: {}", responseErr);
         return responseErr.length() == 0 ? null : responseErr.toString();
     }
 }
