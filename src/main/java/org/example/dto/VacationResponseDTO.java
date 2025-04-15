@@ -1,7 +1,6 @@
 package org.example.dto;
 
 import lombok.Data;
-import org.example.model.AccountingData;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,11 +12,4 @@ public class VacationResponseDTO {
     private BigDecimal monthSalary;
     private List<LocalDate> vacationDates;
     private BigDecimal totalCompensationForVocation;
-
-    public VacationResponseDTO(AccountingData data) {
-        this.averageDaySalary = data.getAverageDaySalary();
-        this.monthSalary = data.getMonthSalary();
-        this.vacationDates = data.getVacationDates();
-        this.totalCompensationForVocation = data.getTotalCompensationForVocation();
-    }
 }

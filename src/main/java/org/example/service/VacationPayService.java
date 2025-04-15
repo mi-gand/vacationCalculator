@@ -1,10 +1,10 @@
 package org.example.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.model.AccountingData;
 import org.example.dto.VacationRequestDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.dto.VacationResponseDTO;
+import org.example.mapper.VacationMapper;
+import org.example.model.AccountingData;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class VacationPayService {
-    public AccountingData createModelAccountingData(VacationRequestDTO dto) {
+    public VacationResponseDTO createResponseDTO(VacationRequestDTO dto) {
         AccountingData data = new AccountingData();
 
         List<BigDecimal> monthSalaries = convertMonthSalariesToBigDecimal(dto.getMonthSalaries());
@@ -47,7 +47,7 @@ public class VacationPayService {
 
         data.setMonthSalary(dto.getAverageMonthlySalary());
 
-        return data;
+        return VacationMapper.toResponseDto(data);
     }
 
     private List<BigDecimal> convertMonthSalariesToBigDecimal(List<Double> monthSalaries) {
